@@ -1,0 +1,9 @@
+@{
+    ViewData["Title"] = "Error";
+    Layout = User.Identity?.IsAuthenticated == true ? "_Layout" : "_AuthLayout";
+}
+<div class="card error-page">
+    <h2>@ViewBag.Code</h2>
+    <p>@ViewBag.Message</p>
+    <a class="btn btn-primary" asp-controller="Dashboard" asp-action="Index">Back to Dashboard</a>
+</div>

@@ -1,0 +1,25 @@
+@model SettingsPageViewModel
+@{ ViewData["Title"] = "Settings"; }
+<div class="grid-2 equal">
+    <form class="card" asp-action="SaveGeneral" method="post">
+        <h3 class="card-title">Application preferences</h3>
+        <div class="form-grid one">
+            <div class="field"><label asp-for="General.InstitutionName"></label><input asp-for="General.InstitutionName" class="input" /><span asp-validation-for="General.InstitutionName" class="field-error"></span><small class="muted">Shown in the page footer.</small></div>
+            <div class="field"><label asp-for="General.StudentsPerPage"></label><input asp-for="General.StudentsPerPage" type="number" min="5" max="50" class="input" /><span asp-validation-for="General.StudentsPerPage" class="field-error"></span><small class="muted">Rows per page on the Students list.</small></div>
+            <div class="field"><label asp-for="General.MinAttendancePercent"></label><input asp-for="General.MinAttendancePercent" type="number" min="0" max="100" class="input" /><span asp-validation-for="General.MinAttendancePercent" class="field-error"></span><small class="muted">Students below this are marked "Low" in the attendance report.</small></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Save preferences</button></div>
+    </form>
+
+    <form class="card" asp-action="ChangePassword" method="post">
+        <h3 class="card-title">My account</h3>
+        <p class="muted" style="margin-bottom:12px">Signed in as <strong>@Model.Email</strong></p>
+        <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+        <div class="form-grid one">
+            <div class="field"><label asp-for="Password.CurrentPassword"></label><input asp-for="Password.CurrentPassword" class="input" autocomplete="current-password" /><span asp-validation-for="Password.CurrentPassword" class="field-error"></span></div>
+            <div class="field"><label asp-for="Password.NewPassword"></label><input asp-for="Password.NewPassword" class="input" autocomplete="new-password" /><span asp-validation-for="Password.NewPassword" class="field-error"></span></div>
+            <div class="field"><label asp-for="Password.ConfirmPassword"></label><input asp-for="Password.ConfirmPassword" class="input" autocomplete="new-password" /><span asp-validation-for="Password.ConfirmPassword" class="field-error"></span></div>
+        </div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Change password</button></div>
+    </form>
+</div>

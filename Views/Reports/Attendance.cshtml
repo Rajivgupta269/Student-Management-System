@@ -1,0 +1,35 @@
+@model AttendanceReportViewModel
+@{ ViewData["Title"] = "Attendance Report"; }
+<form class="card toolbar no-print" method="get" asp-action="Attendance">
+    <div class="field"><label for="courseId">Course</label><select class="input" id="courseId" name="courseId" asp-items="Model.Courses"><option value="">Select course</option></select></div>
+    <div class="field"><label for="from">From</label><input class="input" id="from" type="date" name="from" value="@(Model.From?.ToString("yyyy-MM-dd"))" /></div>
+    <div class="field"><label for="to">To</label><input class="input" id="to" type="date" name="to" value="@(Model.To?.ToString("yyyy-MM-dd"))" /></div>
+    <button class="btn btn-primary" type="submit">Generate</button>
+    <button class="btn btn-outline" type="button" data-print>Print</button>
+</form>
+<section class="card">
+@if (!Model.CourseId.HasValue)
+{
+    <div class="empty">Select a course to see student-wise attendance.</div>
+}
+else if (!Model.Rows.Any())
+{
+    <div class="empty">This course has no students.</div>
+}
+else
+{
+    <h3 class="card-title">Attendance &middot; minimum required @Model.MinPercent% (late counts as attended)</h3>
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>ID</th><th>Student</th><th>Present</th><th>Late</th><th>Absent</th><th>Classes</th><th>Attendance</th><th>Standing</th></tr></thead>
+        <tbody>
+        @foreach (var r in Model.Rows)
+        {
+            <tr><td>@r.Code</td><td>@r.Name</td><td>@r.Present</td><td>@r.Late</td><td>@r.Absent</td><td>@r.Total</td>
+                <td>@(r.Total == 0 ? "-" : r.Percentage.ToString("0.#") + "%")</td>
+                <td>@if (r.Total == 0) { <span class="badge badge-muted">No data</span> }
+                    else if (r.Percentage >= Model.MinPercent) { <span class="badge badge-success">Good</span> }
+                    else { <span class="badge badge-error">Low</span> }</td></tr>
+        }
+        </tbody></table></div>
+}
+</section>

@@ -1,0 +1,72 @@
+@model StudentListViewModel
+@{
+    ViewData["Title"] = "Students";
+    string NextSort(string asc, string desc) => Model.Sort == asc ? desc : asc;
+}
+<div class="page-actions">
+    <p class="muted">@Model.Students.TotalCount student(s) found</p>
+    <a class="btn btn-primary" asp-action="Create">+ Add Student</a>
+</div>
+
+<form class="card filters" method="get" asp-action="Index">
+    <input class="input" type="search" name="q" value="@Model.Q" placeholder="Name or Student ID" aria-label="Search" />
+    <select class="input" name="departmentId" asp-items="Model.Departments"><option value="">All departments</option></select>
+    <select class="input" name="courseId" asp-items="Model.Courses"><option value="">All courses</option></select>
+    <select class="input" name="semester">
+        <option value="">All semesters</option>
+        @for (var i = 1; i <= 8; i++) { <option value="@i" selected="@(Model.Semester == i)">Semester @i</option> }
+    </select>
+    <select class="input" name="status">
+        <option value="">Any status</option>
+        <option value="active" selected="@(Model.Status == "active")">Active</option>
+        <option value="inactive" selected="@(Model.Status == "inactive")">Inactive</option>
+    </select>
+    <button class="btn btn-primary" type="submit">Filter</button>
+    <a class="btn btn-outline" asp-action="Index">Reset</a>
+</form>
+
+<section class="card">
+@if (!Model.Students.Any())
+{
+    <div class="empty">No students match your search. Try changing the filters or add a new student.</div>
+}
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr>
+            <th><a asp-action="Index" asp-route-sort="@NextSort("code","code_desc")" asp-route-q="@Model.Q" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status">ID</a></th>
+            <th><a asp-action="Index" asp-route-sort="@NextSort("name","name_desc")" asp-route-q="@Model.Q" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status">Name</a></th>
+            <th>Department</th><th>Course</th><th>Sem</th>
+            <th><a asp-action="Index" asp-route-sort="@NextSort("admission","admission_desc")" asp-route-q="@Model.Q" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status">Admitted</a></th>
+            <th>Status</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        @foreach (var s in Model.Students)
+        {
+            <tr>
+                <td>@s.StudentCode</td><td>@s.FullName</td><td>@s.Department?.Code</td><td>@s.Course?.Code</td><td>@s.Semester</td>
+                <td>@s.AdmissionDate.ToString("dd MMM yyyy")</td>
+                <td><span class="badge @(s.IsActive ? "badge-success" : "badge-muted")">@(s.IsActive ? "Active" : "Inactive")</span></td>
+                <td class="right actions">
+                    <a class="link" asp-action="Details" asp-route-id="@s.Id">View</a>
+                    <a class="link" asp-action="Edit" asp-route-id="@s.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@s.Id" method="post" class="inline" data-confirm="Delete @s.FullName? Their attendance and result records will also be deleted. This cannot be undone.">
+                        <button type="submit" class="link danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody></table></div>
+
+    <nav class="pager" aria-label="Pagination">
+        @if (Model.Students.HasPrevious)
+        {
+            <a class="btn btn-outline" asp-action="Index" asp-route-page="@(Model.Students.PageIndex - 1)" asp-route-q="@Model.Q" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status" asp-route-sort="@Model.Sort">Previous</a>
+        }
+        <span>Page @Model.Students.PageIndex of @Model.Students.TotalPages</span>
+        @if (Model.Students.HasNext)
+        {
+            <a class="btn btn-outline" asp-action="Index" asp-route-page="@(Model.Students.PageIndex + 1)" asp-route-q="@Model.Q" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status" asp-route-sort="@Model.Sort">Next</a>
+        }
+    </nav>
+}
+</section>

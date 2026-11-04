@@ -1,0 +1,7 @@
+@model Department
+<div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+<div class="form-grid">
+    <div class="field"><label asp-for="Code"></label><input asp-for="Code" class="input" /><span asp-validation-for="Code" class="field-error"></span></div>
+    <div class="field"><label asp-for="Name"></label><input asp-for="Name" class="input" /><span asp-validation-for="Name" class="field-error"></span></div>
+    <div class="field full"><label asp-for="Description"></label><textarea asp-for="Description" rows="3" class="input"></textarea><span asp-validation-for="Description" class="field-error"></span></div>
+</div>

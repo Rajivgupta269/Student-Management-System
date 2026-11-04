@@ -1,0 +1,14 @@
+@model Examination
+<div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+<div class="form-grid">
+    <div class="field full"><label asp-for="Name"></label><input asp-for="Name" class="input" placeholder="e.g. Mid-term Exam" /><span asp-validation-for="Name" class="field-error"></span></div>
+    <div class="field"><label asp-for="CourseId"></label>
+        <select asp-for="CourseId" class="input" asp-items="(SelectList)ViewBag.Courses"><option value="0">Select course</option></select>
+        <span asp-validation-for="CourseId" class="field-error"></span></div>
+    <div class="field"><label asp-for="Semester"></label><input asp-for="Semester" type="number" min="1" max="8" class="input" /><span asp-validation-for="Semester" class="field-error"></span></div>
+    <div class="field"><label asp-for="ExamDate"></label><input asp-for="ExamDate" type="date" class="input" /><span asp-validation-for="ExamDate" class="field-error"></span></div>
+    <div class="field"><label asp-for="Status"></label>
+        <select asp-for="Status" class="input" asp-items='new SelectList(Examination.Statuses, Model.Status)'></select></div>
+    <div class="field"><label asp-for="MaxMarks"></label><input asp-for="MaxMarks" type="number" min="1" max="1000" class="input" /><span asp-validation-for="MaxMarks" class="field-error"></span></div>
+    <div class="field"><label asp-for="PassingMarks"></label><input asp-for="PassingMarks" type="number" min="0" max="1000" class="input" /><span asp-validation-for="PassingMarks" class="field-error"></span></div>
+</div>

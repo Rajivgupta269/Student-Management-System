@@ -1,0 +1,7 @@
+@{ ViewData["Title"] = "Reports"; }
+<div class="report-grid">
+    <a class="card report-card" asp-action="Enrollment"><h3>Student Enrollment</h3><p>Students by department, course, semester and status. Print or export to CSV.</p></a>
+    <a class="card report-card" asp-action="Counts"><h3>Department &amp; Course Counts</h3><p>How many students are enrolled in each department and course.</p></a>
+    <a class="card report-card" asp-action="Attendance"><h3>Attendance Report</h3><p>Student-wise attendance percentage for a course and date range.</p></a>
+    <a class="card report-card" asp-action="Results"><h3>Examination Results</h3><p>Marks, grades and pass rate per examination. Print or export to CSV.</p></a>
+</div>

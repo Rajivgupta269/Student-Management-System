@@ -1,0 +1,24 @@
+@model Student
+@{ ViewData["Title"] = "Student Details"; }
+<div class="card">
+    <div class="detail-head">
+        <div class="avatar">@Model.FullName.Substring(0,1).ToUpper()</div>
+        <div><h2>@Model.FullName</h2><span class="badge @(Model.IsActive ? "badge-success" : "badge-muted")">@(Model.IsActive ? "Active" : "Inactive")</span></div>
+    </div>
+    <dl class="detail-grid">
+        <div><dt>Student ID</dt><dd>@Model.StudentCode</dd></div>
+        <div><dt>Date of Birth</dt><dd>@Model.DateOfBirth.ToString("dd MMM yyyy")</dd></div>
+        <div><dt>Gender</dt><dd>@Model.Gender</dd></div>
+        <div><dt>Email</dt><dd>@Model.Email</dd></div>
+        <div><dt>Phone</dt><dd>@Model.Phone</dd></div>
+        <div><dt>Department</dt><dd>@Model.Department?.Name</dd></div>
+        <div><dt>Course</dt><dd>@Model.Course?.Name</dd></div>
+        <div><dt>Semester</dt><dd>@Model.Semester</dd></div>
+        <div><dt>Admission Date</dt><dd>@Model.AdmissionDate.ToString("dd MMM yyyy")</dd></div>
+        <div class="full"><dt>Address</dt><dd>@(string.IsNullOrWhiteSpace(Model.Address) ? "-" : Model.Address)</dd></div>
+    </dl>
+    <div class="form-actions">
+        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-outline" asp-action="Index">Back to list</a>
+    </div>
+</div>

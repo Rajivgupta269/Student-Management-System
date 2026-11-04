@@ -1,0 +1,17 @@
+@model AttendanceRecord
+@{ ViewData["Title"] = "Edit Attendance"; }
+<form class="card" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+    <dl class="detail-grid" style="margin-bottom:20px">
+        <div><dt>Student</dt><dd>@Model.Student?.StudentCode - @Model.Student?.FullName</dd></div>
+        <div><dt>Course</dt><dd>@Model.Course?.Name</dd></div>
+        <div><dt>Date</dt><dd>@Model.Date.ToString("dd MMM yyyy")</dd></div>
+    </dl>
+    <div class="form-grid">
+        <div class="field"><label asp-for="Status"></label>
+            <select asp-for="Status" class="input" asp-items='new SelectList(AttendanceRecord.Statuses, Model.Status)'></select>
+            <span asp-validation-for="Status" class="field-error"></span></div>
+        <div class="field"><label asp-for="Remarks"></label><input asp-for="Remarks" class="input" /><span asp-validation-for="Remarks" class="field-error"></span></div>
+    </div>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Update</button><a class="btn btn-outline" asp-action="Index">Cancel</a></div>
+</form>

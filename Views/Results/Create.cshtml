@@ -1,0 +1,17 @@
+@model Result
+@{ ViewData["Title"] = "Enter Result"; }
+<form class="card" asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+    <div class="form-grid">
+        <div class="field"><label asp-for="ExaminationId"></label>
+            <select asp-for="ExaminationId" class="input" asp-items="(SelectList)ViewBag.Exams"><option value="0">Select examination</option></select>
+            <span asp-validation-for="ExaminationId" class="field-error"></span></div>
+        <div class="field"><label asp-for="StudentId"></label>
+            <select asp-for="StudentId" class="input" asp-items="(SelectList)ViewBag.Students"><option value="0">Select student</option></select>
+            <span asp-validation-for="StudentId" class="field-error"></span></div>
+        <div class="field"><label asp-for="MarksObtained"></label><input asp-for="MarksObtained" type="number" step="0.5" min="0" class="input" /><span asp-validation-for="MarksObtained" class="field-error"></span></div>
+        <div class="field"><label asp-for="Remarks"></label><input asp-for="Remarks" class="input" /><span asp-validation-for="Remarks" class="field-error"></span></div>
+    </div>
+    <p class="muted" style="margin-top:12px">Marks are checked against the examination's maximum. The percentage, grade and pass/fail status are calculated automatically.</p>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Save Result</button><a class="btn btn-outline" asp-action="Index">Cancel</a></div>
+</form>

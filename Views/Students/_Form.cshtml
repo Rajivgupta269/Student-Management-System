@@ -1,0 +1,28 @@
+@model Student
+<div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+<div class="form-grid">
+    <div class="field"><label asp-for="StudentCode"></label><input asp-for="StudentCode" class="input" /><span asp-validation-for="StudentCode" class="field-error"></span></div>
+    <div class="field"><label asp-for="FullName"></label><input asp-for="FullName" class="input" /><span asp-validation-for="FullName" class="field-error"></span></div>
+    <div class="field"><label asp-for="DateOfBirth"></label><input asp-for="DateOfBirth" type="date" class="input" /><span asp-validation-for="DateOfBirth" class="field-error"></span></div>
+    <div class="field"><label asp-for="Gender"></label>
+        <select asp-for="Gender" class="input" asp-items='new SelectList(new[]{"Male","Female","Other"}, Model.Gender)'></select></div>
+    <div class="field"><label asp-for="Email"></label><input asp-for="Email" type="email" class="input" /><span asp-validation-for="Email" class="field-error"></span></div>
+    <div class="field"><label asp-for="Phone"></label><input asp-for="Phone" class="input" inputmode="numeric" maxlength="10" /><span asp-validation-for="Phone" class="field-error"></span></div>
+    <div class="field"><label asp-for="DepartmentId"></label>
+        <select asp-for="DepartmentId" class="input" asp-items="(SelectList)ViewBag.Departments"><option value="0">Select department</option></select>
+        <span asp-validation-for="DepartmentId" class="field-error"></span></div>
+   <div class="field"><label asp-for="CourseId"></label>
+    <select asp-for="CourseId" class="input">
+        <option value="0" data-dept="">Select course</option>
+        @foreach (var c in (List<CourseOption>)ViewBag.CourseOptions)
+        {
+            <option value="@c.Id" data-dept="@c.DepartmentId" selected="@(c.Id == Model.CourseId)">@c.Name</option>
+        }
+    </select>
+    <span asp-validation-for="CourseId" class="field-error"></span></div>
+    <div class="field"><label asp-for="Semester"></label><input asp-for="Semester" type="number" min="1" max="8" class="input" /><span asp-validation-for="Semester" class="field-error"></span></div>
+    <div class="field"><label asp-for="AdmissionDate"></label><input asp-for="AdmissionDate" type="date" class="input" /><span asp-validation-for="AdmissionDate" class="field-error"></span></div>
+    <div class="field"><label asp-for="IsActive">Status</label>
+        <select asp-for="IsActive" class="input"><option value="true">Active</option><option value="false">Inactive</option></select></div>
+    <div class="field full"><label asp-for="Address"></label><textarea asp-for="Address" rows="3" class="input"></textarea><span asp-validation-for="Address" class="field-error"></span></div>
+</div>

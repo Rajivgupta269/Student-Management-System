@@ -1,0 +1,62 @@
+@model MarkAttendanceViewModel
+@{ ViewData["Title"] = "Mark Attendance"; }
+
+<form class="card toolbar" method="get" asp-action="Mark">
+    <div class="field"><label for="courseId">Course</label>
+        <select class="input" id="courseId" name="courseId" asp-items="Model.Courses"><option value="">Select course</option></select></div>
+    <div class="field"><label for="date">Date</label>
+        <input class="input" id="date" type="date" name="date" value="@Model.Date.ToString("yyyy-MM-dd")" max="@DateTime.Today.ToString("yyyy-MM-dd")" /></div>
+    <button class="btn btn-primary" type="submit">Load students</button>
+    <a class="btn btn-outline" asp-action="Index">Back to records</a>
+</form>
+
+@if (Model.CourseId > 0 && !Model.Rows.Any())
+{
+    <div class="card"><div class="empty">There are no active students in this course yet.</div></div>
+}
+else if (Model.Rows.Any())
+{
+    <form class="card" asp-action="Mark" method="post">
+        <div asp-validation-summary="All" class="alert alert-error"></div>
+        <input type="hidden" name="CourseId" value="@Model.CourseId" />
+        <input type="hidden" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")" />
+
+        <div class="page-actions">
+            <h3 class="card-title" style="margin:0">@Model.Date.ToString("dddd, dd MMM yyyy") &middot; @Model.Rows.Count student(s)</h3>
+            <div class="toolbar">
+                <button type="button" class="btn btn-outline" data-mark-all="Present">All present</button>
+                <button type="button" class="btn btn-outline" data-mark-all="Absent">All absent</button>
+            </div>
+        </div>
+
+        <div class="table-wrap"><table class="table">
+            <thead><tr><th>ID</th><th>Name</th><th>Status</th><th>Remarks</th></tr></thead>
+            <tbody>
+            @for (var i = 0; i < Model.Rows.Count; i++)
+            {
+                var row = Model.Rows[i];
+                <tr>
+                    <td>@row.StudentCode
+                        <input type="hidden" name="Rows[@i].StudentId" value="@row.StudentId" />
+                        <input type="hidden" name="Rows[@i].StudentCode" value="@row.StudentCode" />
+                        <input type="hidden" name="Rows[@i].StudentName" value="@row.StudentName" /></td>
+                    <td>@row.StudentName</td>
+                    <td>
+                        <div class="radio-group" role="radiogroup" aria-label="Status for @row.StudentName">
+                            @foreach (var s in AttendanceRecord.Statuses)
+                            {
+                                <label><input type="radio" name="Rows[@i].Status" value="@s" checked="@(row.Status == s)" /> @s</label>
+                            }
+                        </div>
+                    </td>
+                    <td><input class="input" name="Rows[@i].Remarks" value="@row.Remarks" maxlength="200" aria-label="Remarks for @row.StudentName" /></td>
+                </tr>
+            }
+            </tbody></table></div>
+        <div class="form-actions"><button class="btn btn-primary" type="submit">Save attendance</button></div>
+    </form>
+}
+else
+{
+    <div class="card"><div class="empty">Choose a course and date, then click <strong>Load students</strong>.</div></div>
+}

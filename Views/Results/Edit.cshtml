@@ -1,0 +1,15 @@
+@model Result
+@{ ViewData["Title"] = "Edit Result"; }
+<form class="card" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+    <dl class="detail-grid" style="margin-bottom:20px">
+        <div><dt>Student</dt><dd>@Model.Student?.StudentCode - @Model.Student?.FullName</dd></div>
+        <div><dt>Examination</dt><dd>@Model.Examination?.Name</dd></div>
+        <div><dt>Maximum / Passing</dt><dd>@Model.Examination?.MaxMarks / @Model.Examination?.PassingMarks</dd></div>
+    </dl>
+    <div class="form-grid">
+        <div class="field"><label asp-for="MarksObtained"></label><input asp-for="MarksObtained" type="number" step="0.5" min="0" class="input" /><span asp-validation-for="MarksObtained" class="field-error"></span></div>
+        <div class="field"><label asp-for="Remarks"></label><input asp-for="Remarks" class="input" /><span asp-validation-for="Remarks" class="field-error"></span></div>
+    </div>
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Update Result</button><a class="btn btn-outline" asp-action="Index">Cancel</a></div>
+</form>

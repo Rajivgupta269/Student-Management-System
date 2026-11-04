@@ -1,0 +1,130 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+    var x = Model.Extras;
+    var attTotal = x.Present + x.Late + x.Absent;
+}
+
+<div class="stats">
+    <div class="card stat"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div><p>Total Students</p><h2>@Model.TotalStudents</h2><small>@Model.ActiveStudents active</small></div></div>
+    <div class="card stat"><div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div><p>Total Courses</p><h2>@Model.TotalCourses</h2><small>@Model.TotalDepartments departments</small></div></div>
+    <div class="card stat"><div class="stat-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>
+        <div><p>Total Faculty</p><h2>@Model.TotalFaculty</h2><small>registered members</small></div></div>
+    <div class="card stat"><div class="stat-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg></div>
+        <div><p>Average Attendance</p><h2>@(x.AverageAttendance.HasValue ? x.AverageAttendance.Value.ToString("0.#") + "%" : "N/A")</h2><small>@attTotal record(s)</small></div></div>
+</div>
+
+<div class="grid-2">
+    <section class="card">
+        <h3 class="card-title">Student Enrollment by Department</h3>
+        @if (Model.DeptCounts.Sum() == 0)
+        {
+            <div class="empty">No students enrolled yet. Add a student to see the chart.</div>
+        }
+        else
+        {
+            <div class="chart-box"><canvas id="enrollChart"></canvas></div>
+        }
+    </section>
+    <section class="card">
+        <h3 class="card-title">Quick Actions</h3>
+        <div class="quick">
+            <a class="btn btn-primary" asp-controller="Students" asp-action="Create">Add Student</a>
+            <a class="btn btn-outline" asp-controller="Courses" asp-action="Create">Add Course</a>
+            <a class="btn btn-outline" asp-controller="Faculty" asp-action="Create">Add Faculty</a>
+            <a class="btn btn-outline" asp-controller="Attendance" asp-action="Mark">Record Attendance</a>
+            <a class="btn btn-outline" asp-controller="Reports" asp-action="Index">View Reports</a>
+        </div>
+    </section>
+</div>
+
+<div class="grid-2 equal">
+    <section class="card">
+        <h3 class="card-title">Attendance Overview</h3>
+        @if (attTotal == 0)
+        {
+            <div class="empty">No attendance recorded yet.</div>
+        }
+        else
+        {
+            <div class="chart-box small"><canvas id="attChart"></canvas></div>
+        }
+    </section>
+    <section class="card">
+        <h3 class="card-title">Upcoming Examinations</h3>
+        @if (!x.UpcomingExams.Any())
+        {
+            <div class="empty">No upcoming examinations scheduled.</div>
+        }
+        else
+        {
+            <div class="table-wrap"><table class="table">
+                <thead><tr><th>Date</th><th>Examination</th><th>Course</th></tr></thead>
+                <tbody>
+                @foreach (var e in x.UpcomingExams)
+                {
+                    <tr><td>@e.ExamDate.ToString("dd MMM yyyy")</td><td>@e.Name</td><td>@e.Course?.Code</td></tr>
+                }
+                </tbody></table></div>
+        }
+    </section>
+</div>
+
+<section class="card">
+    <h3 class="card-title">Recent Student Registrations</h3>
+    @if (!Model.RecentStudents.Any())
+    {
+        <div class="empty">No registrations yet.</div>
+    }
+    else
+    {
+        <div class="table-wrap"><table class="table">
+            <thead><tr><th>ID</th><th>Name</th><th>Course</th><th>Semester</th><th>Admitted</th></tr></thead>
+            <tbody>
+            @foreach (var s in Model.RecentStudents)
+            {
+                <tr><td>@s.StudentCode</td>
+                    <td><a asp-controller="Students" asp-action="Details" asp-route-id="@s.Id">@s.FullName</a></td>
+                    <td>@s.Course?.Code</td><td>@s.Semester</td><td>@s.AdmissionDate.ToString("dd MMM yyyy")</td></tr>
+            }
+            </tbody></table></div>
+    }
+</section>
+
+@section Scripts {
+    @if (Model.DeptCounts.Sum() > 0 || attTotal > 0)
+    {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <script>
+            @if (Model.DeptCounts.Sum() > 0)
+            {
+                <text>
+                new Chart(document.getElementById('enrollChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: @Json.Serialize(Model.DeptLabels),
+                        datasets: [{ label: 'Students', data: @Json.Serialize(Model.DeptCounts), backgroundColor: '#15803D', borderRadius: 6 }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+                               scales: { y: { beginAtZero: true, ticks: { precision: 0 } } } }
+                });
+                </text>
+            }
+            @if (attTotal > 0)
+            {
+                <text>
+                new Chart(document.getElementById('attChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Present', 'Late', 'Absent'],
+                        datasets: [{ data: [@x.Present, @x.Late, @x.Absent], backgroundColor: ['#16A34A', '#D97706', '#DC2626'] }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+                </text>
+            }
+        </script>
+    }
+}

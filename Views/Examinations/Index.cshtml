@@ -1,0 +1,38 @@
+@model ExamListViewModel
+@{ ViewData["Title"] = "Examinations"; }
+<div class="page-actions">
+    <p class="muted">@Model.Exams.Count examination(s)</p>
+    <a class="btn btn-primary" asp-action="Create">+ Add Examination</a>
+</div>
+<form class="card toolbar" method="get" asp-action="Index">
+    <div class="field"><label for="courseId">Course</label><select class="input" id="courseId" name="courseId" asp-items="Model.Courses"><option value="">All courses</option></select></div>
+    <div class="field"><label for="upcoming">Show</label>
+        <select class="input" id="upcoming" name="upcoming">
+            <option value="false" selected="@(!Model.Upcoming)">All examinations</option>
+            <option value="true" selected="@Model.Upcoming">Upcoming only</option>
+        </select></div>
+    <button class="btn btn-primary" type="submit">Filter</button>
+    <a class="btn btn-outline" asp-action="Index">Reset</a>
+</form>
+<section class="card">
+@if (!Model.Exams.Any()) { <div class="empty">No examinations found.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Date</th><th>Examination</th><th>Course</th><th>Sem</th><th>Max</th><th>Pass</th><th>Results</th><th>Status</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        @foreach (var e in Model.Exams)
+        {
+            <tr><td>@e.ExamDate.ToString("dd MMM yyyy")</td><td>@e.Name</td><td>@e.Course?.Code</td><td>@e.Semester</td>
+                <td>@e.MaxMarks</td><td>@e.PassingMarks</td><td>@e.Results.Count</td>
+                <td><span class="badge @UiHelper.StatusBadge(e.Status)">@e.Status</span></td>
+                <td class="right actions">
+                    <a class="link" asp-controller="Results" asp-action="Create" asp-route-examId="@e.Id">Enter marks</a>
+                    <a class="link" asp-action="Edit" asp-route-id="@e.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@e.Id" method="post" class="inline" data-confirm="Delete examination @e.Name?">
+                        <button type="submit" class="link danger">Delete</button></form>
+                </td></tr>
+        }
+        </tbody></table></div>
+}
+</section>

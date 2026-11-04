@@ -1,0 +1,23 @@
+@model List<Course>
+@{ ViewData["Title"] = "Courses"; }
+<div class="page-actions"><p class="muted">@Model.Count course(s)</p><a class="btn btn-primary" asp-action="Create">+ Add Course</a></div>
+<section class="card">
+@if (!Model.Any()) { <div class="empty">No courses yet. Add a department first, then a course.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Code</th><th>Name</th><th>Department</th><th>Duration</th><th>Students</th><th>Status</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        @foreach (var c in Model)
+        {
+            <tr><td>@c.Code</td><td>@c.Name</td><td>@c.Department?.Name</td><td>@c.DurationYears yr</td><td>@c.Students.Count</td>
+                <td><span class="badge @(c.IsActive ? "badge-success" : "badge-muted")">@(c.IsActive ? "Active" : "Inactive")</span></td>
+                <td class="right actions">
+                    <a class="link" asp-action="Edit" asp-route-id="@c.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@c.Id" method="post" class="inline" data-confirm="Delete course @c.Name?">
+                        <button type="submit" class="link danger">Delete</button></form>
+                </td></tr>
+        }
+        </tbody></table></div>
+}
+</section>

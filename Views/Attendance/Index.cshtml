@@ -1,0 +1,61 @@
+@model AttendanceListViewModel
+@{ ViewData["Title"] = "Attendance"; }
+<div class="page-actions">
+    <p class="muted">@Model.Records.TotalCount record(s) found</p>
+    <div class="toolbar">
+        <a class="btn btn-outline" asp-controller="Reports" asp-action="Attendance">Attendance Report</a>
+        <a class="btn btn-primary" asp-action="Mark">+ Mark Attendance</a>
+    </div>
+</div>
+
+<form class="card toolbar" method="get" asp-action="Index">
+    <div class="field"><label for="from">From</label><input class="input" id="from" type="date" name="from" value="@(Model.From?.ToString("yyyy-MM-dd"))" /></div>
+    <div class="field"><label for="to">To</label><input class="input" id="to" type="date" name="to" value="@(Model.To?.ToString("yyyy-MM-dd"))" /></div>
+    <div class="field"><label for="courseId">Course</label><select class="input" id="courseId" name="courseId" asp-items="Model.Courses"><option value="">All courses</option></select></div>
+    <div class="field"><label for="status">Status</label>
+        <select class="input" id="status" name="status">
+            <option value="">Any</option>
+            @foreach (var s in AttendanceRecord.Statuses) { <option value="@s" selected="@(Model.Status == s)">@s</option> }
+        </select></div>
+    <div class="field"><label for="q">Student</label><input class="input" id="q" type="search" name="q" value="@Model.Q" placeholder="Name or ID" /></div>
+    <button class="btn btn-primary" type="submit">Filter</button>
+    <a class="btn btn-outline" asp-action="Index">Reset</a>
+</form>
+
+<section class="card">
+@if (!Model.Records.Any())
+{
+    <div class="empty">No attendance records found. Use <strong>Mark Attendance</strong> to record a class.</div>
+}
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Date</th><th>Student</th><th>Course</th><th>Status</th><th>Remarks</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        @foreach (var a in Model.Records)
+        {
+            <tr><td>@a.Date.ToString("dd MMM yyyy")</td>
+                <td>@a.Student?.StudentCode - @a.Student?.FullName</td>
+                <td>@a.Course?.Code</td>
+                <td><span class="badge @UiHelper.StatusBadge(a.Status)">@a.Status</span></td>
+                <td>@a.Remarks</td>
+                <td class="right actions">
+                    <a class="link" asp-action="Edit" asp-route-id="@a.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@a.Id" method="post" class="inline" data-confirm="Delete this attendance record?">
+                        <button type="submit" class="link danger">Delete</button></form>
+                </td></tr>
+        }
+        </tbody></table></div>
+    <nav class="pager" aria-label="Pagination">
+        @if (Model.Records.HasPrevious)
+        {
+            <a class="btn btn-outline" asp-action="Index" asp-route-page="@(Model.Records.PageIndex - 1)" asp-route-from="@(Model.From?.ToString("yyyy-MM-dd"))" asp-route-to="@(Model.To?.ToString("yyyy-MM-dd"))" asp-route-courseId="@Model.CourseId" asp-route-status="@Model.Status" asp-route-q="@Model.Q">Previous</a>
+        }
+        <span>Page @Model.Records.PageIndex of @Model.Records.TotalPages</span>
+        @if (Model.Records.HasNext)
+        {
+            <a class="btn btn-outline" asp-action="Index" asp-route-page="@(Model.Records.PageIndex + 1)" asp-route-from="@(Model.From?.ToString("yyyy-MM-dd"))" asp-route-to="@(Model.To?.ToString("yyyy-MM-dd"))" asp-route-courseId="@Model.CourseId" asp-route-status="@Model.Status" asp-route-q="@Model.Q">Next</a>
+        }
+    </nav>
+}
+</section>

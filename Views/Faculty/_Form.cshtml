@@ -1,0 +1,15 @@
+@model Faculty
+<div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+<div class="form-grid">
+    <div class="field"><label asp-for="FacultyCode"></label><input asp-for="FacultyCode" class="input" /><span asp-validation-for="FacultyCode" class="field-error"></span></div>
+    <div class="field"><label asp-for="FullName"></label><input asp-for="FullName" class="input" /><span asp-validation-for="FullName" class="field-error"></span></div>
+    <div class="field"><label asp-for="Email"></label><input asp-for="Email" type="email" class="input" /><span asp-validation-for="Email" class="field-error"></span></div>
+    <div class="field"><label asp-for="Phone"></label><input asp-for="Phone" class="input" inputmode="numeric" maxlength="10" /><span asp-validation-for="Phone" class="field-error"></span></div>
+    <div class="field"><label asp-for="DepartmentId"></label>
+        <select asp-for="DepartmentId" class="input" asp-items="(SelectList)ViewBag.Departments"><option value="0">Select department</option></select>
+        <span asp-validation-for="DepartmentId" class="field-error"></span></div>
+    <div class="field"><label asp-for="Designation"></label><input asp-for="Designation" class="input" placeholder="e.g. Assistant Professor" /><span asp-validation-for="Designation" class="field-error"></span></div>
+    <div class="field"><label asp-for="JoiningDate"></label><input asp-for="JoiningDate" type="date" class="input" /><span asp-validation-for="JoiningDate" class="field-error"></span></div>
+    <div class="field"><label asp-for="IsActive">Status</label>
+        <select asp-for="IsActive" class="input"><option value="true">Active</option><option value="false">Inactive</option></select></div>
+</div>

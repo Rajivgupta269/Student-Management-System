@@ -1,0 +1,107 @@
+@inject ScholarHub.Services.SettingsService Settings
+@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var settings = await Settings.GetAsync();
+    var userName = User.Identity?.Name ?? "";
+    string Cls(bool on) => on ? "active" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - ScholarHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+        <a class="brand" asp-controller="Dashboard" asp-action="Index">
+            <svg class="brand-logo" viewBox="0 0 40 40" aria-hidden="true">
+                <rect width="40" height="40" rx="10" fill="#15803D"/>
+                <path d="M20 10 7 16.5 20 23l13-6.5L20 10Z" fill="#fff"/>
+                <path d="M13 20.5v5c0 1.5 3.1 3.5 7 3.5s7-2 7-3.5v-5L20 24l-7-3.5Z" fill="#22C55E"/>
+                <rect x="32" y="17" width="2" height="9" rx="1" fill="#fff"/>
+            </svg>
+            <span class="brand-text"><strong>ScholarHub</strong><small>Smarter Campus. Better Learning.</small></span>
+        </a>
+        <nav class="nav">
+            <a class="nav-link @Cls(controller=="Dashboard")" asp-controller="Dashboard" asp-action="Index" title="Dashboard">
+                <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+                <span>Dashboard</span></a>
+            <a class="nav-link @Cls(controller=="Students" && action!="Create")" asp-controller="Students" asp-action="Index" title="All Students">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg>
+                <span>All Students</span></a>
+            <a class="nav-link @Cls(controller=="Students" && action=="Create")" asp-controller="Students" asp-action="Create" title="Add Student">
+                <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+                <span>Add Student</span></a>
+            <a class="nav-link @Cls(controller=="Courses")" asp-controller="Courses" asp-action="Index" title="Courses">
+                <svg viewBox="0 0 24 24"><path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/></svg>
+                <span>Courses</span></a>
+            <a class="nav-link @Cls(controller=="Departments")" asp-controller="Departments" asp-action="Index" title="Departments">
+                <svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+                <span>Departments</span></a>
+            <a class="nav-link @Cls(controller=="Faculty")" asp-controller="Faculty" asp-action="Index" title="Faculty">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                <span>Faculty</span></a>
+            <a class="nav-link @Cls(controller=="Attendance")" asp-controller="Attendance" asp-action="Index" title="Attendance">
+                <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"/></svg>
+                <span>Attendance</span></a>
+            <a class="nav-link @Cls(controller=="Examinations")" asp-controller="Examinations" asp-action="Index" title="Examinations">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>
+                <span>Examinations</span></a>
+            <a class="nav-link @Cls(controller=="Results")" asp-controller="Results" asp-action="Index" title="Results &amp; Marks">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13 17 22l-5-3-5 3 1.5-9"/></svg>
+                <span>Results &amp; Marks</span></a>
+            <a class="nav-link @Cls(controller=="Reports")" asp-controller="Reports" asp-action="Index" title="Reports">
+                <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M8 17V9M13 17V5M18 17v-6"/></svg>
+                <span>Reports</span></a>
+            <a class="nav-link @Cls(controller=="Settings")" asp-controller="Settings" asp-action="Index" title="Settings">
+                <svg viewBox="0 0 24 24"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg>
+                <span>Settings</span></a>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="logout-form">
+                <button type="submit" class="nav-link" title="Logout">
+                    <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+                    <span>Logout</span></button>
+            </form>
+        </nav>
+    </aside>
+    <div class="backdrop" id="backdrop"></div>
+
+    <div class="main">
+        <header class="topbar">
+            <button class="icon-btn" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+            </button>
+            <h1 class="page-title">@ViewData["Title"]</h1>
+            <form class="topsearch" method="get" asp-controller="Students" asp-action="Index" role="search">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="search" name="q" placeholder="Search students by name or ID" aria-label="Search students" />
+            </form>
+            <div class="profile" title="@userName">
+                <span class="avatar-sm">@(userName.Length > 0 ? userName.Substring(0, 1).ToUpper() : "A")</span>
+                <span class="profile-name">@userName</span>
+            </div>
+        </header>
+
+        <main class="content">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success" role="status">@TempData["Success"]</div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-error" role="alert">@TempData["Error"]</div>
+            }
+            @RenderBody()
+        </main>
+        <footer class="footer">&copy; @DateTime.Now.Year @settings.InstitutionName &middot; Powered by ScholarHub &middot; Smarter Campus. Better Learning.</footer>
+    </div>
+</div>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

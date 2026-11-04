@@ -1,0 +1,33 @@
+@model EnrollmentReportViewModel
+@{ ViewData["Title"] = "Enrollment Report"; }
+<form class="card toolbar no-print" method="get" asp-action="Enrollment">
+    <div class="field"><label for="departmentId">Department</label><select class="input" id="departmentId" name="departmentId" asp-items="Model.Departments"><option value="">All</option></select></div>
+    <div class="field"><label for="courseId">Course</label><select class="input" id="courseId" name="courseId" asp-items="Model.Courses"><option value="">All</option></select></div>
+    <div class="field"><label for="semester">Semester</label>
+        <select class="input" id="semester" name="semester"><option value="">All</option>
+            @for (var i = 1; i <= 8; i++) { <option value="@i" selected="@(Model.Semester == i)">@i</option> }</select></div>
+    <div class="field"><label for="status">Status</label>
+        <select class="input" id="status" name="status"><option value="">Any</option>
+            <option value="active" selected="@(Model.Status == "active")">Active</option>
+            <option value="inactive" selected="@(Model.Status == "inactive")">Inactive</option></select></div>
+    <button class="btn btn-primary" type="submit">Generate</button>
+    <a class="btn btn-outline" asp-action="Enrollment" asp-route-departmentId="@Model.DepartmentId" asp-route-courseId="@Model.CourseId" asp-route-semester="@Model.Semester" asp-route-status="@Model.Status" asp-route-export="csv">Export CSV</a>
+    <button class="btn btn-outline" type="button" data-print>Print</button>
+</form>
+<section class="card">
+    <h3 class="card-title">Student Enrollment Report &middot; @Model.Students.Count student(s) &middot; generated @DateTime.Now.ToString("dd MMM yyyy")</h3>
+@if (!Model.Students.Any()) { <div class="empty">No students match these filters.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Course</th><th>Sem</th><th>Phone</th><th>Admitted</th><th>Status</th></tr></thead>
+        <tbody>
+        @foreach (var s in Model.Students)
+        {
+            <tr><td>@s.StudentCode</td><td>@s.FullName</td><td>@s.Department?.Code</td><td>@s.Course?.Code</td><td>@s.Semester</td>
+                <td>@s.Phone</td><td>@s.AdmissionDate.ToString("dd MMM yyyy")</td>
+                <td>@(s.IsActive ? "Active" : "Inactive")</td></tr>
+        }
+        </tbody></table></div>
+}
+</section>

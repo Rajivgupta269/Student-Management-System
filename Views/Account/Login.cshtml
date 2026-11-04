@@ -1,0 +1,14 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Sign in";
+    Layout = "_AuthLayout";
+}
+<form class="card auth-card" asp-action="Login" method="post">
+    <h2>Administrator sign in</h2>
+    <div asp-validation-summary="ModelOnly" class="alert alert-error"></div>
+    <input type="hidden" asp-for="ReturnUrl" />
+    <div class="field"><label asp-for="Email"></label><input asp-for="Email" class="input" autocomplete="username" autofocus /><span asp-validation-for="Email" class="field-error"></span></div>
+    <div class="field" style="margin-top:14px"><label asp-for="Password"></label><input asp-for="Password" class="input" autocomplete="current-password" /><span asp-validation-for="Password" class="field-error"></span></div>
+    <label class="check"><input asp-for="RememberMe" /> Remember me on this device</label>
+    <button class="btn btn-primary" type="submit" style="width:100%;margin-top:16px">Sign in</button>
+</form>

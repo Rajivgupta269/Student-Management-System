@@ -1,0 +1,39 @@
+### ScholarHub REST API - works in VS Code (REST Client extension) and Visual Studio 2022.
+### Change the port to the one shown when you run "dotnet run".
+@host = https://localhost:5001
+
+### 1) Get a JWT token
+POST {{host}}/api/auth/token
+Content-Type: application/json
+
+{ "email": "admin@scholarhub.local", "password": "Admin@12345" }
+
+### 2) Paste the token below, then try the requests
+@token = PASTE_TOKEN_HERE
+
+GET {{host}}/api/stats
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/students?q=&page=1&pageSize=10
+Authorization: Bearer {{token}}
+
+###
+GET {{host}}/api/departments
+Authorization: Bearer {{token}}
+
+###
+POST {{host}}/api/students
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "studentCode": "BCA001", "fullName": "Asha Patil", "dateOfBirth": "2005-04-12",
+  "gender": "Female", "email": "asha@example.com", "phone": "9876543210",
+  "address": "Pune", "departmentId": 1, "courseId": 1, "semester": 1,
+  "admissionDate": "2026-07-01", "isActive": true
+}
+
+###
+GET {{host}}/api/results/student/1
+Authorization: Bearer {{token}}

@@ -1,0 +1,29 @@
+@model CountsReportViewModel
+@{ ViewData["Title"] = "Department & Course Counts"; }
+<div class="page-actions no-print"><span></span><button class="btn btn-outline" type="button" data-print>Print</button></div>
+<section class="card">
+    <h3 class="card-title">Students per Department</h3>
+@if (!Model.ByDepartment.Any()) { <div class="empty">No departments yet.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Code</th><th>Department</th><th>Total students</th><th>Active</th></tr></thead>
+        <tbody>
+        @foreach (var r in Model.ByDepartment) { <tr><td>@r.Code</td><td>@r.Label</td><td>@r.Total</td><td>@r.Active</td></tr> }
+        <tr class="total-row"><td colspan="2">Total</td><td>@Model.ByDepartment.Sum(r => r.Total)</td><td>@Model.ByDepartment.Sum(r => r.Active)</td></tr>
+        </tbody></table></div>
+}
+</section>
+<section class="card">
+    <h3 class="card-title">Students per Course</h3>
+@if (!Model.ByCourse.Any()) { <div class="empty">No courses yet.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Code</th><th>Course</th><th>Total students</th><th>Active</th></tr></thead>
+        <tbody>
+        @foreach (var r in Model.ByCourse) { <tr><td>@r.Code</td><td>@r.Label</td><td>@r.Total</td><td>@r.Active</td></tr> }
+        <tr class="total-row"><td colspan="2">Total</td><td>@Model.ByCourse.Sum(r => r.Total)</td><td>@Model.ByCourse.Sum(r => r.Active)</td></tr>
+        </tbody></table></div>
+}
+</section>

@@ -1,0 +1,6 @@
+@model Course
+@{ ViewData["Title"] = "Edit Course"; }
+<form class="card" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <partial name="_Form" model="Model" />
+    <div class="form-actions"><button class="btn btn-primary" type="submit">Update Course</button><a class="btn btn-outline" asp-action="Index">Cancel</a></div>
+</form>

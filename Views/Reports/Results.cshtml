@@ -1,0 +1,33 @@
+@model ResultsReportViewModel
+@{ ViewData["Title"] = "Results Report"; }
+<form class="card toolbar no-print" method="get" asp-action="Results">
+    <div class="field"><label for="examId">Examination</label><select class="input" id="examId" name="examId" asp-items="Model.Exams"><option value="">All examinations</option></select></div>
+    <button class="btn btn-primary" type="submit">Generate</button>
+    <a class="btn btn-outline" asp-action="Results" asp-route-examId="@Model.ExamId" asp-route-export="csv">Export CSV</a>
+    <button class="btn btn-outline" type="button" data-print>Print</button>
+</form>
+@if (Model.Results.Any())
+{
+    <div class="stats">
+        <div class="card stat"><div><p>Results</p><h2>@Model.Results.Count</h2></div></div>
+        <div class="card stat"><div><p>Passed</p><h2>@Model.Passed</h2></div></div>
+        <div class="card stat"><div><p>Failed</p><h2>@Model.Failed</h2></div></div>
+        <div class="card stat"><div><p>Average %</p><h2>@Model.AveragePercent.ToString("0.#")</h2><small>highest @Model.HighestPercent.ToString("0.#")%</small></div></div>
+    </div>
+}
+<section class="card">
+@if (!Model.Results.Any()) { <div class="empty">No results to report yet.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>Student</th><th>Examination</th><th>Marks</th><th>%</th><th>Grade</th><th>Result</th></tr></thead>
+        <tbody>
+        @foreach (var r in Model.Results)
+        {
+            <tr><td>@r.Student?.StudentCode - @r.Student?.FullName</td><td>@r.Examination?.Name</td>
+                <td>@r.MarksObtained / @r.Examination?.MaxMarks</td><td>@r.Percentage.ToString("0.##")</td><td>@r.Grade</td>
+                <td><span class="badge @UiHelper.StatusBadge(r.Passed ? "Pass" : "Fail")">@(r.Passed ? "Pass" : "Fail")</span></td></tr>
+        }
+        </tbody></table></div>
+}
+</section>

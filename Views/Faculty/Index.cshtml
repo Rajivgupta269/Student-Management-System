@@ -1,0 +1,30 @@
+@model List<Faculty>
+@{ ViewData["Title"] = "Faculty"; }
+<div class="page-actions">
+    <form method="get" asp-action="Index" class="inline-search">
+        <input class="input" type="search" name="q" value="@ViewBag.Q" placeholder="Search name or Faculty ID" aria-label="Search faculty" />
+        <button class="btn btn-outline" type="submit">Search</button>
+    </form>
+    <a class="btn btn-primary" asp-action="Create">+ Add Faculty</a>
+</div>
+<section class="card">
+@if (!Model.Any()) { <div class="empty">No faculty records found.</div> }
+else
+{
+    <div class="table-wrap"><table class="table">
+        <thead><tr><th>ID</th><th>Name</th><th>Department</th><th>Designation</th><th>Email</th><th>Joined</th><th>Status</th><th class="right">Actions</th></tr></thead>
+        <tbody>
+        @foreach (var f in Model)
+        {
+            <tr><td>@f.FacultyCode</td><td>@f.FullName</td><td>@f.Department?.Code</td><td>@f.Designation</td><td>@f.Email</td>
+                <td>@f.JoiningDate.ToString("dd MMM yyyy")</td>
+                <td><span class="badge @(f.IsActive ? "badge-success" : "badge-muted")">@(f.IsActive ? "Active" : "Inactive")</span></td>
+                <td class="right actions">
+                    <a class="link" asp-action="Edit" asp-route-id="@f.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@f.Id" method="post" class="inline" data-confirm="Delete @f.FullName?">
+                        <button type="submit" class="link danger">Delete</button></form>
+                </td></tr>
+        }
+        </tbody></table></div>
+}
+</section>
