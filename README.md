@@ -1,3 +1,6 @@
+
+=======
+# Student-Management-System
 # ScholarHub - Smarter Campus. Better Learning.
 
 Student Management System built with **ASP.NET Core 8 MVC, C#, Razor, Entity Framework Core and SQLite**.
